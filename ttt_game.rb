@@ -1,12 +1,14 @@
+require 'pry-byebug'
+
 class GameSetUp 
   @@games = 0
   @@num_of_players = 0
   @@someone_is_first = false
   @@pieces = ['X', 'O']
   @@board = [
-    ["[]","[]","[]"].join,
-    ["[]","[]","[]"].join,
-    ["[]","[]","[]"].join
+    ["_.","_.","_."],
+    ["_.","_.","_."],
+    ["_.","_.","_."]
   ]
 
   attr_accessor :board
@@ -17,14 +19,16 @@ class GameSetUp
   end
 
   def self.puts_board
-    puts @@board
+    puts @@board[0][0..2].join
+    puts @@board[1][0..2].join
+    puts @@board[2][0..2].join
   end
 
   def initialize
   end
 end 
 
-class Player < GameSetUp
+class GamePlay < GameSetUp
   attr_accessor :name, :num_of_turns, :piece
   
   def initialize
@@ -97,35 +101,53 @@ class Player < GameSetUp
     puts "Row: 1, 2, or 3?"
     row = gets.chomp.to_i - 1 
     puts "Column: 1, 2, or 3?"
-    column = gets.chomp.to_i + 1
+    column = gets.chomp.to_i - 1
     @@board[row][column] = ""
     @@board[row][column] = "#{@piece}"
     @num_of_turns -= 1
   end
 end
 
-class GamePlay < Player
+class GameWin < GameSetUp
 
   @@win = ''
   def initialize
   end
-
-  def self.play_a_round
-    player1.take_turn
-    player2.take_turn
-  end
   
 
-  def check_for_win
-    if board.board[0..2][0..2] == player1.piece
-      @@win = "Congratulations, #{player1.name}! You won!"
+  def self.check_for_win
+    @@checking = @@board.flatten
+    if @@checking[0..2] == "XXX" || @@checking[3..5] == "XXX" || @@checking[6..8] == "XXX"
+      puts "X wins!"
+    elsif @@checking[0] == "X" && @@checking[3] == "X" && @@checking[6] == "X"
+      puts "X wins!"
+    elsif @@checking[1] == "X" && @@checking[4] == "X" && @@checking[7] == "X" 
+      puts "X wins!"  
+    elsif @@checking[2] == "X" && @@checking[5] == "X" && @@checking[8] == "X"   
+      puts "X wins" 
+    elsif @@checking[0] == "X" && @@checking[4] == "X" && @@checking[8] == "X"   
+      puts "X wins"
+    elsif @@checking[6] == "X" && @@checking[4] == "X" && @@checking[2] == "X"
+      puts "X wins"
+    elsif @@checking[0..2] == "OOO" || @@checking[3..5] == "OOO" || @@checking[6..8] == "OOO"
+      puts "O wins!"
+    elsif @@checking[0] == "O" && @@checking[3] == "O" && @@checking[6] == "O"
+      puts "O wins!"
+    elsif @@checking[1] == "O" && @@checking[4] == "O" && @@checking[7] == "O" 
+      puts "O wins!"  
+    elsif @@checking[2] == "O" && @@checking[5] == "O" && @@checking[8] == "O"   
+      puts "O wins" 
+    elsif @@checking[0] == "O" && @@checking[4] == "O" && @@checking[8] == "O"   
+      puts "O wins"
+    elsif @@checking[6] == "O" && @@checking[4] == "O" && @@checking[2] == "O"
+      puts "O wins"  
     end  
   end
   
 end
 
-player1 = Player.new
-player2 = Player.new
+player1 = GamePlay.new
+player2 = GamePlay.new
 puts player1.info
 puts player2.info
 puts "Here is the board:\n"
@@ -134,3 +156,11 @@ player1.take_turn
 GameSetUp.puts_board
 player2.take_turn
 GameSetUp.puts_board
+player1.take_turn
+GameSetUp.puts_board
+player2.take_turn
+GameSetUp.puts_board
+player1.take_turn
+GameSetUp.puts_board
+binding.pry
+GameWin.check_for_win
