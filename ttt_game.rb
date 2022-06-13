@@ -3,7 +3,12 @@ class GameSetUp
   @@num_of_players = 0
   @@someone_is_first = false
   @@pieces = ['X', 'O']
-  
+  @@board = [
+    ["[]","[]","[]"].join,
+    ["[]","[]","[]"].join,
+    ["[]","[]","[]"].join
+  ]
+
   attr_accessor :board
 
   def self.start_game
@@ -11,19 +16,15 @@ class GameSetUp
     @@games +=1
   end
 
+  def self.puts_board
+    puts @@board
+  end
+
   def initialize
-    @board = [
-    ["[]","[]","[]"].join,
-    ["[]","[]","[]"].join,
-    ["[]","[]","[]"].join
-  ]
   end
 end 
 
 class Player < GameSetUp
-  @@player1_turns = 0
-  @@player2_turns = 0
-
   attr_accessor :name, :num_of_turns, :piece
   
   def initialize
@@ -91,24 +92,15 @@ class Player < GameSetUp
     "My name is #{@name}, I have #{@num_of_turns} turns left, and my piece is the #{@piece}."
   end
 
-  def player1_take_turn
-    puts "#{player1.name}, where would you like to put your #{player1.piece}?"
-    puts "Row: "
-    row = gets.chomp.to_i
-    puts "Column: "
-    column = gets.chomp.to_i
-    board.board[row-1][column-1] = "#{player1.piece} "
-    player1.num_of_turns -= 1
-  end
-
-  def player2_take_turn
-    puts "#{player2.name}, where would you like to put your #{player2.piece}?" 
+  def take_turn
+    puts "#{@name}, where would you like to put your #{@piece}?"
     puts "Row: 1, 2, or 3?"
-    row = gets.chomp.to_i
+    row = gets.chomp.to_i - 1 
     puts "Column: 1, 2, or 3?"
-    column = gets.chomp.to_i
-    board.board[row-1][column-1] = "#{player2.piece} "
-    player2.num_of_turns -= 1
+    column = gets.chomp.to_i + 1
+    @@board[row][column] = ""
+    @@board[row][column] = "#{@piece}"
+    @num_of_turns -= 1
   end
 end
 
@@ -118,13 +110,9 @@ class GamePlay < Player
   def initialize
   end
 
-  def play_a_round
-    if @@player1_turns != 0
-      player1_take_turn
-    end
-    if @@player2_turns != 0
-      player2_take_turn
-    end
+  def self.play_a_round
+    player1.take_turn
+    player2.take_turn
   end
   
 
@@ -140,9 +128,9 @@ player1 = Player.new
 player2 = Player.new
 puts player1.info
 puts player2.info
-board = GameSetUp.new
 puts "Here is the board:\n"
-puts board.board
-game = GamePlay.new
-game.play_a_round
-puts board.board
+GameSetUp.puts_board
+player1.take_turn
+GameSetUp.puts_board
+player2.take_turn
+GameSetUp.puts_board
