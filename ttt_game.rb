@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 class GameSetUp 
   
   @@games = 0
@@ -9,9 +7,9 @@ class GameSetUp
   @@pieces = ['X', 'O']
   @@winner = 'false'
   @@board = [
-    ["_.","_.","_."],
-    ["_.","_.","_."],
-    ["_.","_.","_."]
+    ["_ ","_ ","_ "],
+    ["_ ","_ ","_ "],
+    ["_ ","_ ","_ "]
   ]
 
   attr_accessor :board
