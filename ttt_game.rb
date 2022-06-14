@@ -30,59 +30,61 @@ class GameSetUp
     puts @@board[2][0..2].join
   end
 
+  def self.puts_board_flatten
+    puts @@board.flatten[0..2]
+  end
+
   def self.check_for_win
     @@checking = @@board.flatten
-    if @@checking[0..2] == "XXX" || @@checking[3..5] == "XXX" || @@checking[6..8] == "XXX"
+    if @@total_turns == 0
+      puts "Game over. It's a tie."
+    elsif @@checking[0..2].join == "XXX" || @@checking[3..5].join == "XXX" || @@checking[6..8].join == "XXX"
       puts "X wins!"
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[0] == "X" && @@checking[3] == "X" && @@checking[6] == "X"
       puts "X wins!"
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[1] == "X" && @@checking[4] == "X" && @@checking[7] == "X" 
       puts "X wins!" 
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[2] == "X" && @@checking[5] == "X" && @@checking[8] == "X"   
       puts "X wins" 
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[0] == "X" && @@checking[4] == "X" && @@checking[8] == "X"   
       puts "X wins"
       @@total_turns = 0
-      @@winner = 'true'
     elsif @@checking[6] == "X" && @@checking[4] == "X" && @@checking[2] == "X"
       puts "X wins"
       @@total_turns = 0
-      @@winner = 'true'
-    elsif @@checking[0..2] == "OOO" || @@checking[3..5] == "OOO" || @@checking[6..8] == "OOO"
+      return
+    elsif @@checking[0..2].join == "OOO" || @@checking[3..5].join == "OOO" || @@checking[6..8].join == "OOO"
       puts "O wins!"
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[0] == "O" && @@checking[3] == "O" && @@checking[6] == "O"
       puts "O wins!"
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[1] == "O" && @@checking[4] == "O" && @@checking[7] == "O" 
       puts "O wins!"  
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[2] == "O" && @@checking[5] == "O" && @@checking[8] == "O"   
       puts "O wins" 
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[0] == "O" && @@checking[4] == "O" && @@checking[8] == "O"   
       puts "O wins"
       @@total_turns = 0
-      @@winner = 'true'
+      return
     elsif @@checking[6] == "O" && @@checking[4] == "O" && @@checking[2] == "O"
       puts "O wins"  
       @@total_turns = 0 
-      @@winner = 'true'
-    elsif @@total_turns == 0
-       puts "Game over. It's a tie." 
-       @@winner = 'true' 
+      return 
     end  
   end
 end 
@@ -144,6 +146,7 @@ class GamePlay < GameSetUp
     @@board[row][column] = "#{@@player1[:piece]}"
     puts "________"
     GameSetUp.puts_board
+    GameSetUp.check_for_win
   end
 
   def self.player2_turn
@@ -156,21 +159,18 @@ class GamePlay < GameSetUp
     @@board[row][column] = "#{@@player2[:piece]}"
     puts "________"
     GameSetUp.puts_board
+    GameSetUp.check_for_win
   end
   
   def self.play_round
-    while @@total_turns > 0
-      if @@winner == 'false'
-        player1_turn
+    while @@total_turns >= 1
+      player1_turn
+      @@total_turns -= 1
+      if @@total_turns >= 1
+        player2_turn
         @@total_turns -= 1
-        GameSetUp.check_for_win
-          if @@winner == 'false'
-            player2_turn
-            @@total_turns -= 1
-            GameSetUp.check_for_win
-          end 
-      end     
-    end       
+      end   
+    end          
   end
 
 end
