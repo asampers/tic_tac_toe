@@ -29,7 +29,7 @@ class Game
         puts "#{current_player} wins!"
         print_board()
         return
-      else board_full?
+      elsif board_full?
         puts "It's a draw."
         print_board()
         return
