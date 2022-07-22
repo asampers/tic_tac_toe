@@ -1,185 +1,122 @@
-class GameSetUp 
-  
-  @@num_of_players = 0
-  @@someone_is_first = false
-  @@total_turns = 9
-  @@pieces = ['X', 'O']
-  @@winner = 'false'
-  @@board = [
-    ["_ ","_ ","_ "],
-    ["_ ","_ ","_ "],
-    ["_ ","_ ","_ "]
-  ]
+module Winning
 
-  attr_accessor :board
-
-  def initialize
-  end
-
-  def self.puts_board
-    puts @@board[0][0..2].join
-    puts @@board[1][0..2].join
-    puts @@board[2][0..2].join
-  end
-
-  def self.check_for_win
-    @@checking = @@board.flatten
-    if @@checking[0..2].join == "XXX" || @@checking[3..5].join == "XXX" || @@checking[6..8].join == "XXX"
-      puts "X wins!"
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[0] == "X" && @@checking[3] == "X" && @@checking[6] == "X"
-      puts "X wins!"
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[1] == "X" && @@checking[4] == "X" && @@checking[7] == "X" 
-      puts "X wins!" 
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[2] == "X" && @@checking[5] == "X" && @@checking[8] == "X"   
-      puts "X wins" 
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[0] == "X" && @@checking[4] == "X" && @@checking[8] == "X"   
-      puts "X wins"
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[6] == "X" && @@checking[4] == "X" && @@checking[2] == "X"
-      puts "X wins"
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[0..2].join == "OOO" || @@checking[3..5].join == "OOO" || @@checking[6..8].join == "OOO"
-      puts "O wins!"
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[0] == "O" && @@checking[3] == "O" && @@checking[6] == "O"
-      puts "O wins!"
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[1] == "O" && @@checking[4] == "O" && @@checking[7] == "O" 
-      puts "O wins!"  
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[2] == "O" && @@checking[5] == "O" && @@checking[8] == "O"   
-      puts "O wins" 
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[0] == "O" && @@checking[4] == "O" && @@checking[8] == "O"   
-      puts "O wins"
-      @@total_turns = 0
-      @@winner = 'true'
-      return
-    elsif @@checking[6] == "O" && @@checking[4] == "O" && @@checking[2] == "O"
-      puts "O wins"  
-      @@total_turns = 0
-      @@winner = 'true' 
-      return  
-    end  
-  end
-end 
-
-class GamePlay < GameSetUp
-  
-  @@player1 = {
-    name: "",
-    piece: ""
-  }
-
-  @@player2 = {
-    name: "",
-    piece: ""
-  }
-
-  def initialize
-    if @@num_of_players == 0
-      puts "Let's play Tic Tac Toe!"
-    end 
-    get_player_name
-    piece_selection
-  end
-
-  def get_player_name
-    if @@num_of_players == 0
-      puts "Please enter the name of Player 1"
-      @@player1[:name] = gets.chomp
-      @@num_of_players +=1
-    else 
-      puts "Now enter the name of Player 2"
-      @@player2[:name] = gets.chomp
-      @@num_of_players +=1
-    end
-  end
-
-  def piece_selection
-    if @@num_of_players == 1
-      puts "Would you like to be the 'X' or the 'O'?"
-      answer = gets.chomp.upcase
-      if answer == 'X'
-        @@player1[:piece] = @@pieces.shift
-      else 
-        @@player1[:piece] = @@pieces.pop
-      end
-    else 
-      puts "#{@@player2[:name]} will be the #{@@pieces[0]}."
-      @@player2[:piece] = @@pieces.pop
-    end  
-  end
-
-  def self.player1_turn
-    puts "#{@@player1[:name]}, where would you like to put your #{@@player1[:piece]}?"
-    puts "Row: 1, 2, or 3?"
-    row = gets.chomp.to_i - 1 
-    puts "Column: 1, 2, or 3?"
-    column = gets.chomp.to_i - 1
-    @@board[row][column] = ""
-    @@board[row][column] = "#{@@player1[:piece]}"
-    puts "________"
-    GameSetUp.puts_board
-    GameSetUp.check_for_win
-  end
-
-  def self.player2_turn
-    puts "#{@@player2[:name]}, where would you like to put your #{@@player2[:piece]}?"
-    puts "Row: 1, 2, or 3?"
-    row = gets.chomp.to_i - 1 
-    puts "Column: 1, 2, or 3?"
-    column = gets.chomp.to_i - 1
-    @@board[row][column] = ""
-    @@board[row][column] = "#{@@player2[:piece]}"
-    puts "________"
-    GameSetUp.puts_board
-    GameSetUp.check_for_win
-  end
-  
-  def self.play_round
-    while @@total_turns >= 1
-      player1_turn
-      @@total_turns -= 1
-      if @@total_turns >= 1
-        player2_turn
-        @@total_turns -= 1
-      end   
-    end 
-    if @@total_turns == 0 && @@winner == 'false'   
-      puts "Game over. It's a tie."
-    end      
-  end
+  COMBOS = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9], [1,5,9], [3,5,7]]
 
 end
 
+class Game 
 
-player1 = GamePlay.new
-player2 = GamePlay.new
-puts "Here is the board:\n"
-GameSetUp.puts_board
-GamePlay.play_round
+  attr_reader :board, :current_player_id, :players
+
+  def initialize
+    @board = Array.new(10)
+    @current_player_id = 0
+    puts "Player One:"
+    @players = [Player.new(self, "X")]
+    puts "Thank you."
+    puts "Player Two:"
+    @players << Player.new(self, "O")
+    puts "#{current_player} goes first."
+  end
+
+  def play
+    loop do
+      place_player_marker(current_player)
+
+      if player_has_won?(current_player)
+        puts "#{current_player} wins!"
+        print_board()
+        return
+      else board_full?
+        puts "It's a draw."
+        print_board()
+        return
+      end
+
+      switch_players!()
+    end
+  end        
+
+  def free_positions
+    (1..9).select {|position| @board[position].nil?}
+  end
+  
+  def place_player_marker(player)
+    position = player.select_position!
+    puts "#{player} selects #{player.piece} position #{position}."
+    @board[position] = player.piece
+  end
+
+  def player_has_won?(player)
+    COMBOS.any? do |line|
+      line.all? {|position| @board[position] == player.piece}
+    end  
+  end
+
+  def board_full?
+    free_positions.empty?
+  end
+
+  def current_player
+    @players[current_player_id]
+  end
+
+  def other_player_id
+    1 - @current_player_id
+  end
+
+  def opponent
+    @players[other_player_id]
+  end
+
+  def switch_players!
+    @current_player_id = other_player_id()
+  end
+
+  def turn_num
+    10 - free_positions.size
+  end
+
+  def print_board
+    col_separator, row_separator = " | ", "---------"
+    label_for_position = lambda{|position| @board[position] ? @board[position] : position}
+    
+    row_for_display = lambda{|row| row.map(&label_for_position).join(col_separator)}
+    row_positions = [[1,2,3], [4,5,6], [7,8,9]]
+    rows_for_display = row_positions.map(&row_for_display)
+    puts rows_for_display.join("\n" + row_separator + "\n")
+  end
+  
+end 
+
+class Player
+  
+  attr_reader :piece
+
+  def initialize(game, piece)
+    @game = game
+    @piece = piece
+    @name = get_player_name()
+  end
+
+  def get_player_name
+      puts "Please enter your name."
+      name = gets.chomp  
+  end
+
+  def select_position!
+    @game.print_board
+    loop do
+      print "Select your #{piece} position: "
+      selection = gets.to_i
+      return selection if @game.free_positions.include?(selection)
+      puts "Position #{selection} is not available. Try again."
+    end  
+  end
+
+  def to_s
+    "#{@name}"
+  end
+  
+end
+
